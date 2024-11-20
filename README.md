@@ -14,4 +14,10 @@ export var END_AT=2024-09-30T23:59:59Z
 node index.mjs
 ```
 
+Or, run without cloning the repo:
+
+```bash
+npx reyronald/SOC2-HITRUST exec
+```
+
 To create a Github Acccess token, go to https://github.com/settings/tokens
