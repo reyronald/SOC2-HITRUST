@@ -51,7 +51,8 @@ function assertIsDefined(
 ) {
   if (val == null) {
     console.error(
-      `❌ Expected "${name}" to be defined. \n` +
+      `\n` +
+        `❌ Expected "${name}" to be defined. \n` +
         `   It needs to be passed as an environment variable.\n`
     );
     showUsage();
