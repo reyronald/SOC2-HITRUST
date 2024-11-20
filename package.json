@@ -3,5 +3,8 @@
   "main": "index.mjs",
   "bin": {
     "exec": "index.mjs"
+  },
+  "engines": {
+    "node": ">22"
   }
 }
