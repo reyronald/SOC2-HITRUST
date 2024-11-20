@@ -72,6 +72,8 @@ function showUsage() {
       export var END_AT=2024-09-30T23:59:59Z
   
       node main.mjs
+    
+    Get you Github Access Token at https://github.com/settings/tokens
       
   `);
 }
