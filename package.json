@@ -1,4 +1,6 @@
 {
+  "name": "soc2-hitrust",
+  "main": "index.mjs",
   "bin": {
     "exec": "index.mjs"
   }
