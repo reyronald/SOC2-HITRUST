@@ -71,7 +71,7 @@ function showUsage() {
       export var START_AT=2023-10-01T00:00:00Z
       export var END_AT=2024-09-30T23:59:59Z
   
-      node main.mjs
+      npx reyronald/SOC2-HITRUST exec
     
     Get you Github Access Token at https://github.com/settings/tokens
       
