@@ -1,0 +1,5 @@
+{
+  "bin": {
+    "exec": "index.mjs"
+  }
+}
