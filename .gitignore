@@ -1,2 +1,4 @@
 *.csv
 *.xlsx
+.DS_STORE
+node_modules

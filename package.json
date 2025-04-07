@@ -2,6 +2,15 @@
   "name": "soc2-hitrust",
   "version": "0.1.0",
   "main": "index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reyronald/SOC2-HITRUST.git"
+  },
+  "author": {
+    "name": "Ronald Rey",
+    "email": "reyronald@gmail.com",
+    "url": "https://github.com/reyronald"
+  },
   "bin": {
     "exec": "index.mjs"
   },

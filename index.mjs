@@ -4,8 +4,7 @@
 
 import fs from "node:fs";
 
-const REPO_OWNER = process.env.REPO_OWNER;
-const REPO_NAME = process.env.REPO_NAME;
+const REPO = process.env.REPO;
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 
 const ENV_START_AT = process.env.START_AT;
@@ -24,8 +23,7 @@ if (args.includes("help") || args.includes("-h")) {
   process.exit(0);
 }
 
-assertIsDefined(REPO_OWNER, "REPO_OWNER");
-assertIsDefined(REPO_NAME, "REPO_NAME");
+assertIsDefined(REPO, "REPO");
 assertIsDefined(ACCESS_TOKEN, "ACCESS_TOKEN");
 
 /**
@@ -33,6 +31,7 @@ assertIsDefined(ACCESS_TOKEN, "ACCESS_TOKEN");
  * @prop {string} title
  * @prop {string} html_url
  * @prop {string} created_at
+ * @prop {object} user: { login: string }
  * @prop {string | null} merged_at
  * @prop {string | null} closed_at
  */
@@ -41,6 +40,7 @@ assertIsDefined(ACCESS_TOKEN, "ACCESS_TOKEN");
  * @typedef {Object} SlimPullRequest
  * @prop {string} title
  * @prop {string} html_url
+ * @prop {string} user
  * @prop {Date} created_at
  * @prop {Date} merged_at
  */
@@ -64,8 +64,7 @@ function showUsage() {
   console.log(`
     Example usage:
       
-      export var REPO_OWNER=DailyFeats
-      export var REPO_NAME=slfus-client-onboard
+      export var REPO=DailyFeats/slfus-client-onboard
       export var ACCESS_TOKEN=ghp_...
 
       # Optional
@@ -89,7 +88,7 @@ async function getPullRequests(/** @type {number} */ page) {
     ["per_page", "100"],
     ["page", page.toString()],
   ]);
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/pulls?${query.toString()}`;
+  const url = `https://api.github.com/repos/${REPO}/pulls?${query.toString()}`;
 
   const response = await fetch(url, {
     headers: {
@@ -113,6 +112,7 @@ async function getPullRequests(/** @type {number} */ page) {
     .map((pr) => ({
       title: pr.title,
       html_url: pr.html_url,
+      user: pr.user.login,
       created_at: new Date(pr.created_at),
       merged_at: new Date(pr.merged_at),
     }));
@@ -123,7 +123,7 @@ async function getPullRequests(/** @type {number} */ page) {
 async function main() {
   console.log(
     `\n` +
-      `⌛️ Getting pull requests in ${REPO_OWNER}/${REPO_NAME} \n` +
+      `⌛️ Getting pull requests in ${REPO} \n` +
       `   from ${START_AT.toISOString()} to ${END_AT.toISOString()}. \n` +
       `   Please wait...\n`
   );
@@ -141,27 +141,38 @@ async function main() {
     allPullRequests.push(...pullRequestsPage);
   }
 
-  allPullRequests.sort((a, b) => b.merged_at.getTime() - a.merged_at.getTime());
+  allPullRequests.sort(
+    (a, b) => -b.merged_at.getTime() + a.merged_at.getTime()
+  );
 
   const pullRequestsInDateRange = allPullRequests.filter(
     (pr) => pr.merged_at >= START_AT && pr.merged_at <= END_AT
   );
 
   const csv =
-    "Repo,Title,URL,Created,Merged\n" +
+    [
+      // Columns
+      "URL",
+      "Title",
+      "Author",
+      "Created",
+      "Merged",
+    ].join(",") +
+    "\n" +
     pullRequestsInDateRange
       .map((pr) =>
         [
-          REPO_NAME,
-          `"${pr.title}"`,
           pr.html_url,
+          `"${pr.title}"`,
+          pr.user,
           pr.created_at.toISOString(),
           pr.merged_at.toISOString(),
         ].join(",")
       )
       .join("\n");
 
-  const filename = `${REPO_NAME} pull requests from ${START_AT.toUTCString()} to ${END_AT.toUTCString()}.csv`;
+  const repoName = REPO?.split("/")[1] ||"";
+  const filename = `${repoName} pull requests from ${START_AT.toUTCString()} to ${END_AT.toUTCString()}.csv`;
 
   fs.writeFileSync(filename, csv);
 
