@@ -3,7 +3,7 @@
 You can run this as it is hosted in Github without having to clone the repo locally by leveraging `npx` like this:
 
 ```bash
-export var REPO=DailyFeats/slfus-client-onboard
+export var REPO=org/repo
 export var ACCESS_TOKEN=ghp_...
 
 # Optional

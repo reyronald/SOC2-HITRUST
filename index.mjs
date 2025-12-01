@@ -64,7 +64,7 @@ function showUsage() {
   console.log(`
     Example usage:
       
-      export var REPO=DailyFeats/slfus-client-onboard
+      export var REPO=org/repo
       export var ACCESS_TOKEN=ghp_...
 
       # Optional
@@ -171,7 +171,7 @@ async function main() {
       )
       .join("\n");
 
-  const repoName = REPO?.split("/")[1] ||"";
+  const repoName = REPO?.split("/")[1] || "";
   const filename = `${repoName} pull requests from ${START_AT.toUTCString()} to ${END_AT.toUTCString()}.csv`;
 
   fs.writeFileSync(filename, csv);
